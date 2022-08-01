@@ -90,6 +90,8 @@ export class LinkedList<T> implements Collection<T> {
       throw new Error('Linked List does not exist');
     }
   }
+
+  
   insertBefore(value: T, newValue: T) {
     let located = false;
     let tracker = this.start;
@@ -101,6 +103,14 @@ export class LinkedList<T> implements Collection<T> {
           item: newValue,
           next: nextNode,
         }
+      }
+      else if (tracker.item === value && located === false){ // if the node we are looking for is the first node in the linked list
+         located = true;
+         const nextNode = this.start;
+         this.start = {
+          item: newValue,
+          next:nextNode,
+         }
       }
       tracker = tracker.next; // need to do this in the while loop to go to the next node every single time if the if statement above is not triggered. Otherwise your test will run forever and you wont know whats happening..... =(
     }
