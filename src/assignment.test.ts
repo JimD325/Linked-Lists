@@ -35,17 +35,18 @@ describe("LinkedList", () => {
     );
   });
 
-  it("can append an element", () => {
+  it("can append several elements", () => {
     const list = new LinkedList<string>();
 
     list.insert("Frodo");
     list.insert("Sam");
     list.append("Pippin");
     list.insert("Merry");
+    list.append("Saruman");
 
     const str = list.toString();
     expect(str).toEqual(
-      "{ Merry } -> { Sam } -> { Frodo } -> { Pippin } -> NULL"
+      "{ Merry } -> { Sam } -> { Frodo } -> { Pippin } -> { Saruman } -> NULL"
     );
     console.log("append successful");
   });
@@ -57,10 +58,13 @@ describe("LinkedList", () => {
     list.insert("Sam");
     list.insert("Merry");
 
-    list.insertBefore("Sam", "Pippin");
+    list.insertBefore("Sam", "Pippin"); // tests if insert before works in the middle of the LL
+    list.insertBefore("Merry", "Saruman") // tests if insert before works for the first node of LL
 
     const str = list.toString();
-    expect(str).toEqual("{ Merry } -> { Pippin } -> { Sam } -> { Frodo } -> NULL");
+    console.log(list);
+    expect(str).toEqual("{ Saruman } -> { Merry } -> { Pippin } -> { Sam } -> { Frodo } -> NULL");
+    
   });
 
   it("can insert after an element", () => {
@@ -70,11 +74,17 @@ describe("LinkedList", () => {
     list.insert("Sam");
     list.insert("Merry");
 
-    list.insertAfter("Sam", "Pippin");
+    list.insertAfter("Sam", "Pippin"); // middle of LL
+    list.insertAfter("Frodo", "Saruman") // insert after the end of the LL
 
     const str = list.toString();
     expect(str).toEqual(
-      "{ Merry } -> { Sam } -> { Pippin } -> { Frodo } -> NULL"
+      "{ Merry } -> { Sam } -> { Pippin } -> { Frodo } -> { Saruman } -> NULL"
     );
+    console.log('InsertAfter Successful');
   });
+  it('boilerplate', () =>{
+
+  });
+  
 });
