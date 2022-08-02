@@ -13,12 +13,14 @@ import { Collection, display } from "./Collection";
 export class LinkedList<T> implements Collection<T> {
   start: Node<T> | undefined; // or head
   butt: Node<T> | undefined;
+
+
   insert(item: T) {
     this.start = {
       item: item,
       next: this.start,
     };
-  }
+  };
 
   includes(item: T): boolean {
     // What is the first item?
@@ -51,7 +53,7 @@ export class LinkedList<T> implements Collection<T> {
 
     // What is the last thing to do?
     return false;
-  }
+  };
 
   toString(): string {
     // For each item
@@ -72,7 +74,7 @@ export class LinkedList<T> implements Collection<T> {
     str += "NULL";
 
     return str;
-  }
+  };
 
   append(value: T): void {
     const newNode = { // this is the new node you will be appending
@@ -89,7 +91,7 @@ export class LinkedList<T> implements Collection<T> {
     if (!lastNode) {
       throw new Error('Linked List does not exist');
     }
-  }
+  };
 
   
   insertBefore(value: T, newValue: T) {
@@ -117,7 +119,7 @@ export class LinkedList<T> implements Collection<T> {
     if (located === false) {
       throw new Error('target node not found');
     }
-  }
+  };
 
 
   insertAfter(value: T, newValue: T) {
@@ -137,8 +139,35 @@ export class LinkedList<T> implements Collection<T> {
     if (located === false) {
       throw new Error('target node not found');
     }
+  };
+
+  kthFromEnd(k: number){ // if k =0, LL.length>k>0, k>LL>length, LL.length =1, k=LL>length 
+    let tracker = this.start;
+    let length = 0;
+    let arr = [];
+    while(tracker!=null){
+      tracker=tracker.next;
+      length++;
+    };
+    if(length < k)
+    throw new Error(`Linked List Length exceeded by input`);
+    if (length >= k){
+      tracker = this.start;
+      for(let i = 0; i <= length - k-1; i++){
+        tracker = tracker?.next;
+        let nodeInfo = tracker?.item;
+        arr.push(nodeInfo);
+      };
+      return arr[arr.length-k];
+    };
+    if (length = 1){
+      tracker = this.start;
+      return tracker?.item;
+    }
   }
 }
+
+
 // A node tracks one item and the next node
 interface Node<T> {
   item: T;
