@@ -1,9 +1,9 @@
+import { Collection } from "./Collection";
 import { LinkedList } from "./LinkedList";
-
 
 describe("Linked List", () => {
   it("can append an element", () => {
-    const list = new LinkedList<string>();
+    const list: Collection<string> = new LinkedList<string>();
 
     list.insert("Frodo");
     list.insert("Sam");
@@ -18,7 +18,7 @@ describe("Linked List", () => {
   });
 
   it("can insert before an element", () => {
-    const list = new LinkedList<string>();
+    const list: Collection<string> = new LinkedList<string>();
 
     list.insert("Frodo");
     list.insert("Sam");
@@ -31,7 +31,7 @@ describe("Linked List", () => {
   });
 
   it("can insert after an element", () => {
-    const list = new LinkedList<string>();
+    const list: Collection<string> = new LinkedList<string>();
 
     list.insert("Frodo");
     list.insert("Sam");
@@ -43,5 +43,18 @@ describe("Linked List", () => {
     expect(str).toEqual(
       "{ Merry } -> { Sam } -> { Pippin } -> { Frodo } -> NULL"
     );
+  });
+
+  it("can return node value k from the end", () => {
+    const list: Collection<string> = new LinkedList<string>();
+
+    list.insert("Frodo");
+    list.insert("Sam");
+    list.insert("Merry");
+    list.insert("derek");
+    list.insert("zayah");
+    list.kthFromEnd(2);
+    const str = list.toString();
+    expect(str).toEqual("{ Merry }");
   });
 });
