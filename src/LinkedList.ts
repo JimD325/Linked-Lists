@@ -143,6 +143,7 @@ export class LinkedList<T> implements Collection<T> {
 
   kthFromEnd(k: number){ // if k =0, LL.length>k>0, k>LL>length, LL.length =1, k=LL>length 
     let tracker = this.start;
+    k = Math.abs(k);
     let length = 0;
     let arr = [];
     while(tracker!=null){
