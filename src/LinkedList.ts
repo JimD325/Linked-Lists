@@ -1,49 +1,43 @@
 import { Collection, display } from "./Collection";
 
-// ES5 prototype
-// const LinkedList = function() {};
-// LinkedList.prototype.insert(item) {};
-
-// class
-// interface
-
-// Three parts of a variable:
-// let name: type = value;
-
 export class LinkedList<T> implements Collection<T> {
-  start: Node<T> | undefined; // or head
-  butt: Node<T> | undefined;
+  head: Node<T> | undefined;
+  tail: Node<T> | undefined;
+  size = 0;
 
+  static zip<T>(ll1: LinkedList<T>, ll2: LinkedList<T>): LinkedList<T> {
+    const zipped = new LinkedList<T>();
+    let t1 = ll1.head;
+    let t2= ll2.head;
+    let totalSize = ll1.size+ll2.size;
+    for (let i = 0; i < totalSize; i++){
+      if(t1?.item){
+        zipped.append(t1.item);
+        t1=t1.next
+      }
+      if(t2?.item){
+        zipped.append(t2.item);
+        t2=t2.next
+      }
+    }
+    return zipped;
+  }
 
   insert(item: T) {
-    this.start = {
+    this.head = {
       item: item,
-      next: this.start,
+      next: this.head,
     };
-  };
+    if (this.tail === undefined) {
+      this.tail = this.head;
+    }
+    this.size += 1;
+  }
 
   includes(item: T): boolean {
-    // What is the first item?
-    // this.start
-    let tracker = this.start;
+    let tracker = this.head;
 
-    // if (tracker?.item === item) {
-    //   return true;
-    // }
-    // // check the second item
-    // if (tracker?.next?.item === item) {
-    //   return true;
-    // }
-    // // check the third item
-    // if (tracker?.next?.next?.item === item) {
-    //   return true;
-    // }
-    // // check the fourth item
-    // if (tracker?.next?.next?.next?.item === item) {
-    //   return true;
-    // }
-    while (tracker !== undefined /* there is a value */) {
-      // do this thing
+    while (tracker !== undefined) {
       if (tracker.item === item) {
         return true;
       }
@@ -51,19 +45,13 @@ export class LinkedList<T> implements Collection<T> {
       tracker = tracker.next;
     }
 
-    // What is the last thing to do?
     return false;
-  };
+  }
 
   toString(): string {
-    // For each item
-    //   get its string using `display(item)`
-    //   Put it inside { }
-    //   Put an arrow between all items
-    //   End the entire list with a "NULL"
     let str = "";
 
-    let tracker = this.start;
+    let tracker = this.head;
     while (tracker !== undefined) {
       // Add this node to the string
       const strItem = display(tracker.item);
@@ -74,103 +62,65 @@ export class LinkedList<T> implements Collection<T> {
     str += "NULL";
 
     return str;
-  };
+  }
 
-  append(value: T): void {
-    const newNode = { // this is the new node you will be appending
-      item: value,
-      next: undefined, // need to be undefined because there will be nothing at the end, because the new node will be the new end.
+  append(item: T): void {
+    if (this.tail === undefined) {
+      this.insert(item);
+    } else {
+      this.tail = this.tail.next = { item };
+      this.size += 1;
     }
-    let lastNode = this.start; // start at the head
-    if (lastNode) { // if last node is true
-      while (lastNode.next) {  // then for every instance where lastNode.next is true, go through the LL and set lastNode = to the next node. 
-        lastNode = lastNode.next;
-      }
-      lastNode.next = newNode; // when lastNode.next is no longer returning true, set lastNode equal to the newNode.
-    }
-    if (!lastNode) {
-      throw new Error('Linked List does not exist');
-    }
-  };
+  }
 
-  
-  insertBefore(value: T, newValue: T) {
-    let located = false;
-    let tracker = this.start;
-    while (tracker) {           // while tracker returns true
-      if (tracker.next?.item === value && located === false) { // if the node after our current node has a value equal to the value we are looking for, and if it is true that we have not yet located our new value in the LL:
-        const nextNode = tracker.next; // then store the next node
-        located = true; // set located to true
-        tracker.next = { // then also set the next of the node we are currently in equal to the newValue being inserted.
-          item: newValue,
-          next: nextNode,
-        }
-      }
-      else if (tracker.item === value && located === false){ // if the node we are looking for is the first node in the linked list
-         located = true;
-         const nextNode = this.start;
-         this.start = {
-          item: newValue,
-          next:nextNode,
-         }
-      }
-      tracker = tracker.next; // need to do this in the while loop to go to the next node every single time if the if statement above is not triggered. Otherwise your test will run forever and you wont know whats happening..... =(
-    }
-    if (located === false) {
-      throw new Error('target node not found');
-    }
-  };
-
-
-  insertAfter(value: T, newValue: T) {
-    let located = false; // this has a very similar start to insert before. 
-    let tracker = this.start;
-    while (tracker) {
-      if (tracker.item === value && located === false) {
-        located = true;
-        const nextNode = tracker.next;
+  insertBefore(needle: T, item: T) {
+    let tracker = this.head;
+    while (tracker?.next !== undefined) {
+      if (tracker.next.item === needle) {
         tracker.next = {
-          item: newValue,
-          next: nextNode,
-        }
+          item,
+          next: tracker.next,
+        };
+        this.size += 1;
+        return;
       }
       tracker = tracker.next;
     }
-    if (located === false) {
-      throw new Error('target node not found');
-    }
-  };
+  }
 
-  kthFromEnd(k: number){ // if k =0, LL.length>k>0, k>LL>length, LL.length =1, k=LL>length 
-    let tracker = this.start;
-    k = Math.abs(k);
-    let length = 0;
-    let arr = [];
-    while(tracker!=null){
-      tracker=tracker.next;
-      length++;
-    };
-    if(length < k)
-    throw new Error(`Linked List Length exceeded by input`);
-    if (length >= k){
-      tracker = this.start;
-      for(let i = 0; i <= length - k-1; i++){
-        tracker = tracker?.next;
-        let nodeInfo = tracker?.item;
-        arr.push(nodeInfo);
-      };
-      return arr[arr.length-k];
-    };
-    if (length = 1){
-      tracker = this.start;
-      return tracker?.item;
+  insertAfter(needle: T, item: T) {
+    let tracker = this.head;
+    while (tracker !== undefined) {
+      if (tracker.item === needle) {
+        tracker.next = {
+          item,
+          next: tracker.next,
+        };
+        this.size += 1;
+        return;
+      }
+      tracker = tracker.next;
     }
+  }
+
+  kth(k: number): T {
+    let tracker = this.head;
+    while (tracker !== undefined) {
+      if (k === 0) {
+        return tracker.item;
+      }
+      k -= 1;
+      tracker = tracker.next;
+    }
+    throw new Error("Went off end of list");
+  }
+
+  kthFromEnd(k: number): T {
+    return this.kth(this.size - k - 1);
   }
 }
 
-
-// A node tracks one item and the next node
 interface Node<T> {
   item: T;
-  next: Node<T> | undefined;
+  next?: Node<T> | undefined;
 }
